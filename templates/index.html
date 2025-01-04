@@ -1,0 +1,138 @@
+<!--My Project For Pearson Accredition "U18 IoT", Network & Cybersecurity Specialization -->
+<!--Rawan Amr Abdelsattar @ WE Zayed ATS -->
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IoT Dashboard</title>
+    <link rel="shortcut icon" href="iot2.ico">
+
+    <!-- Simple CSS styles for a user-friendly Dashboard -->
+    <style>
+        body {
+            font-family: Arial ,sans-serif;
+            padding: 20px;
+            background-color: #f4f4f9;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            margin-bottom: 55px;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #695aa4;
+            color: white;
+        }
+        footer {
+            width: 100%;
+            font-weight: 500;
+            color: white;
+            background-color:#695aa4;
+            position: fixed;
+            margin: 0;
+            bottom: 0;
+            left: 0;
+            text-align: center;
+        }
+        #refreshButton, #deleteLogsButton{
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #695aa4;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        #refreshButton:hover, #deleteLogsButton:hover{
+          opacity: 85%;
+        }
+
+        #refreshButton:active, #deleteLogsButton:active{
+          color: #695aa4;
+          background-color: white;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Motion Detection Dashboard</h1>
+
+<button id="refreshButton" onclick="loadLogs()">Refresh Logs</button>
+<button id="deleteLogsButton">Delete All Logs</button>
+
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Timestamp</th>
+            <th>Message</th>
+        </tr>
+    </thead>
+    <tbody id="logTableBody">
+        <!-- Logs will be inserted here dynamically (by script below) -->
+    </tbody>
+</table>
+
+<footer>
+  <p id="footer-text">Rawan Amr Abdelsattar @ WE Zayed ATS</p>
+</footer>
+
+<script>
+    function loadLogs() {
+        fetch('http://localhost:5000/logs')
+            .then(response => response.json())
+            .then(data => {
+                const tableBody = document.getElementById("logTableBody");
+                tableBody.innerHTML = ""; // Clear previous logs
+                data.forEach(log => {
+                    const row = document.createElement("tr");
+                    const idCell = document.createElement("td");
+                    idCell.textContent = log.id; // ID
+                    const timestampCell = document.createElement("td");
+                    timestampCell.textContent = log.timestamp; // Timestamp
+                    const messageCell = document.createElement("td");
+                    messageCell.textContent = log.message; // Message
+                    row.appendChild(idCell);
+                    row.appendChild(timestampCell);
+                    row.appendChild(messageCell);
+                    tableBody.appendChild(row);
+                });
+            })
+            .catch(error => console.error("Error fetching logs:", error));
+    }
+
+    document.getElementById("deleteLogsButton").addEventListener("click", () => {
+    if (confirm("Are you sure you want to delete all logs?")) {
+        fetch('http://localhost:5000/logs', {
+            method: 'DELETE'
+        })
+        .then(response => {
+            if (response.ok) {
+                console.log("Logs deleted successfully.");
+                alert("All logs have been deleted.");
+                loadLogs(); // Refresh the table
+            } else {
+                console.error("Failed to delete logs.");
+                alert("Failed to delete logs.");
+            }
+        })
+        .catch(error => {
+            console.error("Error deleting logs:", error);
+        });
+    }
+});
+
+
+    // Initial load of logs when the page loads for the first time
+    loadLogs();
+</script>
+
+</body>
+</html>
