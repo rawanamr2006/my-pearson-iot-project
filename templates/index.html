@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IoT Dashboard</title>
-    <link rel="shortcut icon" href="iot2.ico">
+    <link rel="shortcut icon" href="./static/iot2.ico">
 
     <!-- Simple CSS styles for a user-friendly Dashboard -->
     <style>
@@ -41,6 +41,11 @@
             left: 0;
             text-align: center;
         }
+
+        a {
+          color: white;
+        }
+
         #refreshButton, #deleteLogsButton{
             margin: 20px 0;
             padding: 10px;
@@ -62,7 +67,7 @@
 </head>
 <body>
 
-<h1>Motion Detection Dashboard</h1>
+<h1>IoT Motion Detection Dashboard</h1>
 
 <button id="refreshButton" onclick="loadLogs()">Refresh Logs</button>
 <button id="deleteLogsButton">Delete All Logs</button>
@@ -73,6 +78,7 @@
             <th>ID</th>
             <th>Timestamp</th>
             <th>Message</th>
+            <th>Email Sent To</th>
         </tr>
     </thead>
     <tbody id="logTableBody">
@@ -81,10 +87,12 @@
 </table>
 
 <footer>
-  <p id="footer-text">Rawan Amr Abdelsattar @ WE Zayed ATS</p>
+  <p id="footer-text"><a href="https://www.linkedin.com/in/rawan-amr-abdelsattar-32158025a/" target="_blank">Rawan Amr Abdelsattar</a> @ WE Zayed ATS &nbsp; - &nbsp;<a href="https://github.com/rawanamr2006/my-pearson-iot-project" target="_blank">Code Repo</a></p>
 </footer>
 
 <script>
+
+    // loads logs from my IoT Flask API
     function loadLogs() {
         fetch('http://localhost:5000/logs')
             .then(response => response.json())
@@ -99,36 +107,50 @@
                     timestampCell.textContent = log.timestamp; // Timestamp
                     const messageCell = document.createElement("td");
                     messageCell.textContent = log.message; // Message
+                    const emailCell = document.createElement("td");
+                    emailCell.textContent = log.email; // email
                     row.appendChild(idCell);
                     row.appendChild(timestampCell);
                     row.appendChild(messageCell);
+                    row.appendChild(emailCell);
                     tableBody.appendChild(row);
                 });
             })
             .catch(error => console.error("Error fetching logs:", error));
     }
 
-    document.getElementById("deleteLogsButton").addEventListener("click", () => {
-    if (confirm("Are you sure you want to delete all logs?")) {
+    // deletes all logs after simple authentication procedure
+    function deleteLogs() {
+        const password = prompt("Enter password to delete logs:");
+        if (!password) {
+            alert("Password is required to delete logs.");
+            return;
+        }
+
         fetch('http://localhost:5000/logs', {
-            method: 'DELETE'
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ password: password })
         })
         .then(response => {
-            if (response.ok) {
-                console.log("Logs deleted successfully.");
-                alert("All logs have been deleted.");
-                loadLogs(); // Refresh the table
-            } else {
-                console.error("Failed to delete logs.");
-                alert("Failed to delete logs.");
+            if (!response.ok) {
+                throw new Error("Unauthorized or error deleting logs.");
             }
+            return response.json();
+        })
+        .then(data => {
+            alert(data.message);
+            // Optionally, reload the logs table
+            loadLogs();
         })
         .catch(error => {
-            console.error("Error deleting logs:", error);
+            console.error("Error:", error);
+            alert("Failed to delete logs. Check your password or try again.");
         });
     }
-});
-
+    document.getElementById("deleteLogsButton").addEventListener("click", () => deleteLogs())
 
     // Initial load of logs when the page loads for the first time
     loadLogs();
