@@ -6,6 +6,7 @@ from flask import Flask, render_template
 import sqlite3
 from flask_cors import CORS
 from datetime import datetime
+import pytz
 
 import requests
 import json
@@ -15,11 +16,11 @@ CORS(app)
 
 AUTHORIZED_PASSWORD = "mypasswd"
 
-# Function to send Email to my account by triggering the Webhook
-def send_email(recepient_email):
-    
+# Function to send Email to account by triggering the Make.com Webhook in the scenario i created
+def send_email(recepient_email, timestamp):
+
     url = "https://hook.eu2.make.com/7ublywlgv7c1rk4m6hnod8wstwowbn3b"
-    data = {"event": "motion_detected", "message": "PIR detected motion!!", 'email': recepient_email}
+    data = {"event": "motion_detected", "message": "PIR detected motion!!", 'email': recepient_email, 'timestamp': timestamp}
     headers = {'Content-Type': 'application/json'}
 
     response = requests.post(url, data=json.dumps(data), headers=headers)
@@ -28,7 +29,7 @@ def send_email(recepient_email):
 
 # Create SQLite database and logs table if they don't exist
 def init_db():
-    conn = sqlite3.connect('logs.db')
+    conn = sqlite3.connect('/home/rawanamr/my_iot_api_flask_app/logs.db')
     c = conn.cursor()
     c.execute('''CREATE TABLE IF NOT EXISTS logs
                  (id INTEGER PRIMARY KEY, timestamp TEXT, message TEXT, email TEXT)''')
@@ -36,9 +37,8 @@ def init_db():
     conn.close()
 
 # Function to insert log into the database
-def insert_log(message, email):
-    timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-    conn = sqlite3.connect('logs.db')
+def insert_log(message, email, timestamp):
+    conn = sqlite3.connect('/home/rawanamr/my_iot_api_flask_app/logs.db')
     c = conn.cursor()
     c.execute('INSERT INTO logs (timestamp, message, email) VALUES (?, ?, ?)', (timestamp, message, email))
     conn.commit()
@@ -47,13 +47,14 @@ def insert_log(message, email):
 # API route to receive and store logs
 @app.route('/log', methods=['POST'])
 def log():
+    timestamp = datetime.now(pytz.timezone("Africa/Cairo")).strftime('%Y-%m-%d %H:%M:%S')
     data = request.get_json()
     message = data.get('message')
     email = data.get('email')
     if message:
-        insert_log(message, email)
+        insert_log(message, email, timestamp)
         print(email, type(email))
-        send_email(email)
+        send_email(email, timestamp)
         return jsonify({"status": "success", "message": "Log added."}), 200
     else:
         return jsonify({"status": "error", "message": "No message provided."}), 400
@@ -62,7 +63,7 @@ def log():
 # API route to get and retrieve logs
 @app.route('/logs', methods=['GET'])
 def get_logs():
-    conn = sqlite3.connect('logs.db')
+    conn = sqlite3.connect('/home/rawanamr/my_iot_api_flask_app/logs.db')
     c = conn.cursor()
     c.execute('SELECT * FROM logs ORDER BY id ASC')
     logs = [{"id": row[0], "timestamp": row[1], "message": row[2], "email": row[3]} for row in c.fetchall()]
@@ -79,7 +80,7 @@ def delete_logs():
         return jsonify({"error": "Unauthorized"}), 403
 
     # Clear the logs
-    conn = sqlite3.connect('logs.db')
+    conn = sqlite3.connect('/home/rawanamr/my_iot_api_flask_app/logs.db')
     c = conn.cursor()
     c.execute('DELETE FROM logs')
     conn.commit()
