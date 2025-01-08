@@ -94,7 +94,7 @@
 
     // loads logs from my IoT Flask API
     function loadLogs() {
-        fetch('http://localhost:5000/logs')
+        fetch('https://rawanamr.pythonanywhere.com/logs')
             .then(response => response.json())
             .then(data => {
                 const tableBody = document.getElementById("logTableBody");
@@ -127,7 +127,7 @@
             return;
         }
 
-        fetch('http://localhost:5000/logs', {
+        fetch('https://rawanamr.pythonanywhere.com/logs', {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json'
