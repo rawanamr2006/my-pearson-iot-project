@@ -16,7 +16,7 @@ CORS(app)
 
 AUTHORIZED_PASSWORD = "mypasswd"
 
-# Function to send Email to account by triggering the Make.com Webhook in the scenario i created
+# Function to send Email to my account by triggering the Webhook
 def send_email(recepient_email, timestamp):
 
     url = "https://hook.eu2.make.com/7ublywlgv7c1rk4m6hnod8wstwowbn3b"
