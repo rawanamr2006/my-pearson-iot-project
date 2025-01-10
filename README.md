@@ -17,10 +17,10 @@ How It Works
 ![Flowchart](https://github.com/user-attachments/assets/c3a76ccc-593f-4268-b75c-370ec99a97ea)
 
 Some Notes
- Device may need to be manually reset after saving configuration
- If connected to Wi-Fi but no internet connection, only the buzzer will start but no email
+1) Device may need to be manually reset after saving configuration
+2) If connected to Wi-Fi but no internet connection, only the buzzer will start but no email
 notification or dashboard update can be done. But connection to Wi-Fi Network (any
 WLAN) is mandatory to start detection.
- Make sure to consider placing the sensor away from any sources of interference or heat
+3) Make sure to consider placing the sensor away from any sources of interference or heat
 sources as this will cause false positives
- When testing, kindly make sure that the battery is not faulty or drained.
+4) When testing, kindly make sure that the battery is not faulty or drained.
