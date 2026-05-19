@@ -1,36 +1,12 @@
+#-------------- RAWAN AMR ABDULSATTAR -----------------------#
+#--------------FCIS AIN SHAMS UNIVERSITY---------------------#
+#------------SMART MOTION DETECTION SYSTEM-------------------#
+
 import network
 import socket
 import os
 import time
 import json
-
-
-# def connect_to_wifi():
-#     try:
-#         with open("config.json", "r") as f:
-#             config = json.load(f)
-#             ssid = config['ssid']
-#             password = config["password"]
-#     except Exception as e:
-#         print("Error loading Wi-Fi credentials:", e)
-#         return False
-# 
-#     # Connect as a station
-#     sta = network.WLAN(network.STA_IF)
-#     sta.active(True)
-#     sta.connect(ssid, password)
-# 
-#     print(f"Connecting to Wi-Fi SSID: {ssid}...")
-#     for _ in range(10):  # Try for 10 seconds
-#         if sta.isconnected():
-#             print(f"Connected! IP: {sta.ifconfig()[0]}")
-#             return True
-#         time.sleep(1)
-# 
-#     print("Failed to connect to Wi-Fi.")
-#     return False
-# 
-# connect_to_wifi()
 
 
 def start_config_portal():

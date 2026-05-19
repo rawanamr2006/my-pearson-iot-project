@@ -1,5 +1,6 @@
-# My Project For Pearson Accredition "U18 IoT", Network & Cybersecurity Specialization
-# Rawan Amr Abdelsattar @ WE Zayed ATS
+#-------------- RAWAN AMR ABDULSATTAR -----------------------#
+#--------------FCIS AIN SHAMS UNIVERSITY---------------------#
+#------------SMART MOTION DETECTION SYSTEM-------------------#
 
 #importing libraries to be used
 
@@ -77,7 +78,3 @@ while True:
     
     time.sleep(1) # to prevent rapid notifications and logs
 
-
-
-  
-  
