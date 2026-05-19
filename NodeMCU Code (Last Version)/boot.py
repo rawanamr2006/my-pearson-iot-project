@@ -1,4 +1,4 @@
-#-------------- RAWAN AMR ABDULSATTAR -----------------------#
+#-------------- RAWAN AMR ABDELSATTAR -----------------------#
 #--------------FCIS AIN SHAMS UNIVERSITY---------------------#
 #------------SMART MOTION DETECTION SYSTEM-------------------#
 
