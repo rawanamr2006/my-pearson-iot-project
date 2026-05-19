@@ -1,5 +1,4 @@
-# My Project For Pearson Accredition "U18 IoT", Network & Cybersecurity Specialization
-# Rawan Amr Abdelsattar @ WE Zayed ATS
+# Rawan Amr Abdelsattar @ FCIS AIN SHAMS UNIVERSITY
 
 from flask import Flask, request, jsonify
 from flask import Flask, render_template
