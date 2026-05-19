@@ -61,9 +61,8 @@ def start_config_portal():
                 print(f"Complete body received: {body}")
 
                 # Parse POST data
-                params = parse_post_data(body) #{k: v for k, v in (x.split('=') for x in body.split('&'))}
-#                 params['email'] = '@'.join(params['email'].split("%40"))  # Decode email
-#                 params['ssid'] = " ".join(params['ssid'].split("+"))
+                params = parse_post_data(body) 
+
                 print(f"Parsed parameters: {params}")
 
                 # Save configuration
